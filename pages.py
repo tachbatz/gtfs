@@ -4,6 +4,7 @@ import sys
 import matplotlib.pyplot as plt
 import io
 import urllib, base64
+import plotly.graph_objects as go,plotly.express as px # interactive graph plotting
 
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -196,7 +197,8 @@ def reports_for_line(line_id, city, direction, report_date, lang):
   popularity = popularity[ (popularity['agency_id']==agency_id) & (popularity['line_id']== line_id)] # get the popularity of the choosen route.
   values_to_render['today_popularity_among_his_agency'] = popularity['agency_popularity'].iloc[0] if not popularity['agency_popularity'].empty else "N/A" #add value to dictionary.
 
-  hours=["04-06", "06-08", "08-10", "10-12" , "12-14", "14-16", "16-18" , "18-20" , "20-22", "22-24", "24-28"] # histogram hours ranges.
+  hours=["04 - 06", "06 - 08", "08 - 10", "10 - 12" , "12 - 14",
+         "14 - 16", "16 - 18" , "18 - 20" , "20 - 22", "22 - 24", "24 - 28"] # histogram hours ranges.
 
   title = 'Number of Trips, Divided Into Hour Ranges' if lang=='en' else 'כמות הנסיעות שהקו מבצע, בחלוקה לטווחי שעות'[::-1]
   y_axis = 'Number of Trips' if lang=='en' else 'מספר נסיעות'[::-1]
@@ -204,6 +206,9 @@ def reports_for_line(line_id, city, direction, report_date, lang):
 
   picture = histogram_picture(hours,histogram_list_trip_per_hours(today_schedule_times),x_axis,y_axis,title) # histogram picture of route departure for today
   values_to_render['today_schedule_picture'] = picture #add value to dictionary.
+
+  interactive_graph = histogram_plotly(hours, histogram_list_trip_per_hours(today_schedule_times), title)
+  values_to_render['interactive_graph'] = interactive_graph
   
   # directions of route
   
@@ -744,44 +749,14 @@ def pie_chart(labels, sizes , size=1):
   return uri
 
 
-'''def adrress_station(stop_desc): # string describe station adress, remove empty values from stop_desc at stop table.
-  ir="עיר:"
-  rehov="רחוב:"
-  razif="רציף:"
-  koma="קומה:"
-  string=""
-  if stop_desc.find(ir)-stop_desc.find(rehov)<8:
-      string+=""
-  else:
-      string+=rehov+" "+stop_desc[stop_desc.find(rehov)+5 : stop_desc.find(ir)-1]
-  if stop_desc.find(razif)-stop_desc.find(ir)<7:
-      string+=""
-  else:
-      string+=" "+ir+" "+stop_desc[ stop_desc.find(ir)+4 : stop_desc.find(razif)-1]
-  if stop_desc.find(koma)-stop_desc.find(razif)<9:
-      string+=""
-  else:
-      string+=" "+razif+" "+stop_desc[ stop_desc.find(razif)+5 : stop_desc.find(koma)-1]
-  if len(stop_desc)-1-stop_desc.find(koma)<7:
-      string+=""
-  else:
-      string+=" "+koma+" "+stop_desc[ stop_desc.find(koma)+6 :]
-  return string
-'''
-  
-'''def list_of_station(): # create list of stations to form of station.
-  with connections['monitoring_warehouse'].cursor() as cursor:
-    cursor.execute("""SELECT stop_id, stop_code,stop_desc
-                      FROM (SELECT stop_id, stop_code, CONCAT(stop_street,", ",stop_city) AS stop_desc FROM stops) AS s WHERE stop_id < 1000;""")
-  rows = cursor.fetchall()                   
-  column=['stop_id', 'stop_code', 'stop_desc']
-  data = pd.DataFrame( rows , columns=column ) # create DataFrame from column and SQL query table.
-  #data['stop_desc'] = data['stop_desc'].apply(lambda x: adrress_station(x) )
-  data['description'] = data.agg(lambda x: f"{x['stop_code']} | {x['stop_desc']}", axis=1) # combine two columns of string to one.
-  subset = data[['stop_id', 'description']]
-  tuples = [tuple(x) for x in subset.to_numpy()] # tuples of stations to choice field at form.
-  return tuples
-'''
+def histogram_plotly(x, y, graph_title):
+  """This function creates an interactive plotly graph"""
+  df = pd.DataFrame({'Hours': x, 'Number of trips': y})
+  figure = px.bar(df, x='Hours', y='Number of trips', title=graph_title)
+  figure = figure.update_layout(title_text=graph_title, title_x=0.5)
+  return figure.to_html(full_html=False, default_height=400, default_width=900)
+
+
   
 def min_and_max_difference_between_station(station_lst): # get list of stations distances and ruturn the min and max difference
   max_diff=0
