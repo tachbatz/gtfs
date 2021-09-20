@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+{%load static%}
+
+<head>
+    <meta charset="utf-8"/>
+    <title>Station {{stop_code}}</title>
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static 'mysite/styles.css' %}"/>
+
+</head>
+<body>
+
+<!--
+{% if in_update == '1' %}
+  <div style='background-color: yellow; text-align: center;'>The website is currently in an update process</div>
+{%endif%}
+-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+      $("#change_date").on("submit", function(){
+        $("#pageloader").fadeIn();
+      });//submit
+    });//document ready
+  </script>  
+
+    <div class="container">
+
+        <div class="site-header">
+            <h1>Station No. {{stop_code}} Drilldown</h1>
+            <h3>As of:
+                <form action="../bus_station_report/" method="GET" name="change_date" id="change_date">
+                    <input type=hidden name="station" value={{stop_id}}>
+                    <input type=date name="report_date" value={{report_date}} min={{min_date}} max={{max_date}}><br><button type="submit" id="btnFetch" class="line_form__btn btn btn-primary mb-2" style='width: 135px;'>Change</button>
+                </form>
+            </h3>
+            <span class="labelmain">
+            <h3><a href="?station={{ stop_id }}&report_date={{report_date|safe}}&export=True">Export</a></h3>
+            </span>
+        </div>
+
+       <div class="content-wrapper">
+            <div class="first-section-content-wrapper">
+                <div class="protfolio-items-wrapper-bus-line">
+
+
+
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <h2>Station Name</h2>
+                            </div>
+
+                            <div class="measure-wrapper">
+                                <label>{{stop_name}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <h2>Station Address</h2>
+                            </div>
+
+                            <div class="measure-wrapper">
+                                <label>{{stop_adress}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <h2>First Estimated Bus Arrival</h2>
+                            </div>
+
+                            <div class="measure-wrapper">
+                                <label>{{first_arrival}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <h2>Last Estimated Bus Departure</h2>
+                            </div>
+
+                            <div class="measure-wrapper">
+                                <label>{{last_arrival}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <br>
+
+            
+            
+            <div class="second-section-content-wrapper">
+                <div class="protfolio-items-wrapper-hist">
+                    <div class="protfolio-item-wrapper-hist">
+                        <div class="protfolio-img-background"></div>
+
+                        <div class="img-text-wrapper-hist">
+
+                            <div class="logo-wrapper">
+                                <img src="data:image/png;base64,{{histogram_hours}}"> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="second-section-content-wrapper">
+                <div class="protfolio-items-wrapper-hist">
+                    <div class="protfolio-item-wrapper-hist">
+                        <div class="protfolio-img-background"></div>
+
+                        <div class="img-text-wrapper-hist">
+
+                            <div class="logo-wrapper">
+                                <img src="data:image/png;base64,{{histogram_agencies}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <br><br>
+
+            <span class="labelmain"><hr><center>Lines in Station</center><hr></span><br>
+
+            <div class="third-section-content-wrapper">
+                <div class="protfolio-items-wrapper">
+                    <table class="styled-table">
+                        <thead>
+                        <tr>
+                            <th>Line Number</th>
+                            <th>Agency Name</th>
+                            <th>Number of trips Today</th>
+                            <th>Trip Headsign</th>
+                            <th>Route</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for line in routes_table%}
+                        <tr class="active-row">
+                            <td><a href="/lines_report/?line_id={{ line.0 }}&direction={{ line.3 }}&report_date={{report_date|safe}}">{{ line.1 }}</a></td>
+                            <td>{{ line.2 }}</td>
+                            <td>{{ line.4 }}</td>
+                            <td>{{ line.5 }}</td>
+                            <td>From <i>{{ line.7 }}</i><br>To <i>{{ line.8 }}</i></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+
+{% endblock %}

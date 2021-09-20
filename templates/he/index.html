@@ -1,0 +1,51 @@
+{% extends 'he/base.html' %}
+
+{% block content %}
+
+<div dir="rtl"  class="contant-wrapper">
+    <div dir="rtl"  class="protfolio-items-wrapper">
+    
+        <a href="line_form/?lang=he"><div dir="rtl"  class="protfolio-item-wrapper"> 
+            {% load static %}
+            <div dir="rtl"  class="protfolio-img-background" style="background-image: url({% static 'mysite/images/protfolio1.jpg' %});"></div>
+
+            <div dir="rtl"  class="img-text-wrapper">
+                <div dir="rtl"  class="logo-wrapper">
+                </div>
+
+                <div dir="rtl"  class="subtitle">
+                    ניתוח ברמת הקו
+                </div>
+            </div>
+        </div></a>
+
+        <a href="station_form/?lang=he"><div dir="rtl"  class="protfolio-item-wrapper">
+            {% load static %}
+            <div dir="rtl"  class="protfolio-img-background" style="background-image: url({% static 'mysite/images/protfolio2.jpg' %});"></div>
+
+            <div dir="rtl"  class="img-text-wrapper">
+                <div dir="rtl"  class="logo-wrapper">
+                </div>
+
+                <div dir="rtl"  class="subtitle">
+                    ניתוח ברמת התחנה
+                </div>
+            </div>
+        </div></a>
+
+        <a href="agency_form/?lang=he"><div dir="rtl"  class="protfolio-item-wrapper">
+            {% load static %}
+            <div dir="rtl"  class="protfolio-img-background" style="background-image: url({% static 'mysite/images/protfolio3.jpg' %});"></div>
+
+            <div dir="rtl"  class="img-text-wrapper">
+                <div dir="rtl"  class="logo-wrapper">
+                </div>
+
+                <div dir="rtl"  class="subtitle">
+                    ניתוח ברמת המפעיל
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}    

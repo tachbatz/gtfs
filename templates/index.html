@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="contant-wrapper">
+    <div class="protfolio-items-wrapper">
+    
+        <a href="line_form/"><div class="protfolio-item-wrapper"> 
+            {% load static %}
+            <div class="protfolio-img-background" style="background-image: url({% static 'mysite/images/protfolio1.jpg' %});"></div>
+
+            <div class="img-text-wrapper">
+                <div class="logo-wrapper">
+                </div>
+
+                <div class="subtitle">
+                    Analysis by Line
+                </div>
+            </div>
+        </div></a>
+
+        <a href="station_form/"><div class="protfolio-item-wrapper">
+            {% load static %}
+            <div class="protfolio-img-background" style="background-image: url({% static 'mysite/images/protfolio2.jpg' %});"></div>
+
+            <div class="img-text-wrapper">
+                <div class="logo-wrapper">
+                </div>
+
+                <div class="subtitle">
+                    Analysis by Station
+                </div>
+            </div>
+        </div></a>
+
+        <a href="agency_form/"><div class="protfolio-item-wrapper">
+            {% load static %}
+            <div class="protfolio-img-background" style="background-image: url({% static 'mysite/images/protfolio3.jpg' %});"></div>
+
+            <div class="img-text-wrapper">
+                <div class="logo-wrapper">
+                </div>
+
+                <div class="subtitle">
+                    Analysis by Agency
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}    

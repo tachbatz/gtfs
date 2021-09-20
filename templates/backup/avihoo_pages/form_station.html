@@ -1,0 +1,75 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Bus Stations Drilldown Search</title>
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static 'mysite/styles.css' %}"/>
+
+</head>
+<body>
+    <div class="container">
+
+        <div class="nav-wrapper">
+
+            <div class="left-side">
+                <div class="nav-link-wrapper ">
+                    <a href="/">Home</a>
+                </div>
+
+                <div class="nav-link-wrapper ">
+                    <a href="/about/">About</a>
+                </div>
+
+                <div class="nav-link-wrapper ">
+                    <a href="/create/?report=1">Bus Lines</a>
+                </div>
+
+                <div class="nav-link-wrapper active-nav-link">
+                    <a href="/create/?report=3">Bus Stations</a>
+                </div>
+            </div>
+
+            <div class="right-side">
+                <div class="brand">
+                    <div>BusTAU</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="site-header">
+            <h1>BusTAU</h1>
+            <h2>Analyze Your Bus Trips!</h2>
+        </div>
+
+        <div class="form-content-wrapper">
+            <form class="line_form" action="bus_station_report/" method="GET">
+                {%csrf_token %}
+                <div class="line_form__title">Bus Stations Drilldown Search Form</div>
+                
+                <p class="line_form__desc">
+                  Please choose the bus station (currently from Tel Aviv only)
+                </p>
+                
+                <div class="line_form__item">
+                  <label for="station" class="line_form__label">Station:</label>
+                  <select name="station" label="Stations" required>
+                  {% for station in stations %}
+                    <option value="{{station.0}}">{{station.1}}</option>
+                  {% endfor %}
+                  </select>
+                  <!-- <input type="text" class="line_form__input line_form__input--small" name="station" id="station" placeholder="Select the bus station here" value="{{current_bus_station}}"> -->                  
+                </div>
+                
+                
+                <div class="line_form__item">
+                  <button class="line_form__btn" type="submit">Submit</button>
+                </div>
+
+              </form>
+          </div>
+
+    </div>
+</body>
+</html>

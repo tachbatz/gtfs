@@ -1,0 +1,487 @@
+{% extends 'he/base.html' %}
+
+{% block content %}
+
+{%load static%}
+
+
+<!--
+{% if in_update == '1' %}
+  <div dir="rtl" style='background-color: yellow; text-align: center;'>The website is currently in an update process</div>
+{%endif%}
+-->
+
+
+
+        <!-- <div dir="rtl" class="site-header">
+            <h1>TransPortIL</h1>
+            <span dir="rtl"  class="labelmain">Analyze Your Bus Trips!</span>
+        </div> -->
+        
+
+        <div dir="rtl" class="site-header">
+          <h1><u>קו {{line_number}} של המפעיל {{agency_name}}</u></h1>
+          <span dir="rtl"  class="labelmain">מתחנת {{ route_name.0 }}<br>לתחנת {{ route_name.1 }}<br>כיוון נסיעה: 
+            {% for cell in directions %}
+                {% if cell != direction %}
+                    <a href="?line_id={{ line_id }}&direction={{ cell }}&report_date={{report_date|safe}}&lang=he">{{ cell }}</a> |
+                {% else %}
+                    {{ cell }} |
+            {% endif %}
+            {% endfor %}</span><br>
+            
+            <form action="../lines_report/" method="GET">
+                <input type="hidden" name="lang" value="he">
+                <input type=hidden name="direction" value={{direction}}>
+                <input type=hidden name="line_id" value={{line_id}}>
+                <h2>תאריך הדו"ח:</h2> <input type=date name="report_date" value={{report_date}} min={{min_date}} max={{max_date}}><br>
+                <button type="submit" id="btnFetch" class="line_form__btn btn btn-primary mb-2" style='width: 135px;'>שינוי</button>
+            </form>
+            <span dir="rtl"  class="labelmain">
+            <h3><a href="?line_id={{ line_id }}&direction={{ direction }}&report_date={{report_date|safe}}&export=True">ייצוא</a></h3>
+            </span> 
+                
+
+
+
+          
+          <!-- <div dir="rtl" class="site-header">
+            <h1>TransPortIL</h1>
+            <span dir="rtl"  class="labelmain">Analyze Your Bus Trips!</span>
+            <a href="?line_number={{ line_number }}&city={{ city }}&direction=1&report_date={{report_date|safe}}">1</a> | <a href="?line_number={{ line_number }}&city={{ city }}&direction=2&report_date={{report_date|safe}}">2</a>
+        </div> -->
+          
+        </div>
+        
+        <div dir="rtl" class="third-section-content-wrapper">
+            {% if alternative_flag == 1 %}
+            <h3 dir='rtl' align='center'>אלטרנטיבות הקו:</h3>
+              <table class="styled-table" dir="rtl" style="width: 75%;">
+                {% for line in alternatives %}
+                  <tr>
+                  {% for cell in line %}
+                    <td>
+                    {{ cell }}
+                    </td>
+                  {% endfor %}
+                  </tr>
+                {% endfor %}
+              </table>    
+            {% else %}
+            <h4 dir='rtl' align='center'>אין לקו זה אלטרנטיבות בכיוון הנבחר</h4>
+          {% endif %}
+        </div>
+        
+        <div dir="rtl" class="content-wrapper">
+            <div dir="rtl" class="first-section-content-wrapper">
+                <div dir="rtl" class="protfolio-items-wrapper-bus-line">
+
+                    <!---- now should be a list of data that containes the measurements that you calculated-->
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <span dir="rtl"  class="labelmain">זמן נסיעה משוער<br><img src="{% static 'question_mark.png' %}" title="זמן הנסיעה המשוער להגעה לתחנת היעד, ביחס לכיוון הנבחר {{ direction }}" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div dir="rtl" class="measure-wrapper">
+                                <label>
+                                    {% if estimated_travel_time.0 > 0 %}
+                                        
+                                        {% if estimated_travel_time.0 == 1 %}
+                                            שעה
+                                        {% else %}
+                                        {{estimated_travel_time.0}}
+                                            שעות
+                                        {% endif %}
+                                        ו {{estimated_travel_time.1}}
+                                        {% if estimated_travel_time.1 == 1 %}
+                                                דקה
+                                        {% else %}
+                                                דקות
+                                        {% endif %}
+                                {% elif estimated_travel_time.1 > 0 %}
+                                    
+                                    {% if estimated_travel_time.1 == 1 %}
+                                        דקה
+                                    {% else %}
+                                    {{estimated_travel_time.1}}
+                                        דקות
+                                    {% endif %}
+                                {% else %}
+                                  --
+                                {% endif %} 
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <span dir="rtl"  class="labelmain">מהירות ממוצעת משוערת<br><img src="{% static 'question_mark.png' %}" title="המהירות הממוצעת המתוכננת של הקו" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div dir="rtl" class="measure-wrapper">
+                                <label style='margin: auto;'>{{estimated_avarage_speed}} קמ"ש</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <span dir="rtl"  class="labelmain">מרחק הנסיעה<br><img src="{% static 'question_mark.png' %}" title="המרחק בקילומטרים שהקו יעבור במהלך המסלול, ביחס לכיוון הנבחר {{ direction }}" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div dir="rtl" class="measure-wrapper">
+                                <label>{{length_travel}} ק"מ</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <span dir="rtl"  class="labelmain">מרחק ממוצע בין התחנות<br><img src="{% static 'question_mark.png' %}" title="המרחק הממוצע המתוכנן שהקו יעבור בין התחנות לאורך המסלול, ביחס לכיוון הנבחר {{ direction }}" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div dir="rtl" class="measure-wrapper">
+                                <label>{{average_distance_between_stops}} ק"מ</label>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            
+            <br>
+                    
+                    
+                    
+        <div dir="rtl" class="content-wrapper">
+            <div dir="rtl" class="first-section-content-wrapper">
+                <div dir="rtl" class="protfolio-items-wrapper-bus-line">
+
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <span dir="rtl"  class="labelmain">מרחק מינימלי בין תחנות<br><img src="{% static 'question_mark.png' %}" title="המרחק המינימלי הממוצע המתוכנן בין התחנות לאורך המסלול, ביחס לכיוון הנבחר {{ direction }}" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div dir="rtl" class="measure-wrapper">
+                                <label>{{min_distance}} ק"מ</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <span dir="rtl"  class="labelmain">מרחק מקסימלי בין תחנות<br><img src="{% static 'question_mark.png' %}" title="המרחק המקסימלי הממוצע המתוכנן בין התחנות לאורך המסלול, ביחס לכיוון הנבחר {{ direction }}" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div dir="rtl" class="measure-wrapper">
+                                <label>{{max_distance}} ק"מ</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <span dir="rtl"  class="labelmain">מספר נסיעות מתוכננות<br><img src="{% static 'question_mark.png' %}" title="מספר הנסיעות המתוכננות שהקו צפוי לבצע, ביחס לכיוון הנבחר {{ direction }}" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div dir="rtl" class="measure-wrapper">
+                                <label>{{number_trip_today}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <span dir="rtl"  class="labelmain">שעת נסיעה ראשונה<br><img src="{% static 'question_mark.png' %}" title="השעה הצפויה בה הקו יחל לשרת" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div dir="rtl" class="measure-wrapper">
+                                <label>{{first_trip}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+                    
+                    
+                    <br>
+                    
+                    
+        <div dir="rtl" class="content-wrapper">
+            <div dir="rtl" class="first-section-content-wrapper">
+                <div dir="rtl" class="protfolio-items-wrapper-bus-line">
+
+
+
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <span dir="rtl"  class="labelmain">שעת נסיעה אחרונה<br><img src="{% static 'question_mark.png' %}" title="השעה בה הקו צפוי לסיים את השירות" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div dir="rtl" class="measure-wrapper">
+                                <label>{{last_trip}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <span dir="rtl"  class="labelmain">תדירות ממוצעת<br><img src="{% static 'question_mark.png' %}" title="כל כמה זמן צפוי בממוצע הקו לצאת לדרך מתחנת המוצע, ביחס לכיוון הנבחר {{ direction }}" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div dir="rtl" class="measure-wrapper">
+                                <label>
+                                    
+                                {% if today_frequency.0 > 0 %}
+                                כל
+                                        {% if today_frequency.0 == 1 %}
+                                            שעה
+                                        {% else %}
+                                        {{today_frequency.0}}
+                                            שעות
+                                        {% endif %}
+                                        ו {{today_frequency.1}}
+                                        {% if today_frequency.1 == 1 %}
+                                                דקה
+                                        {% else %}
+                                                דקות
+                                        {% endif %}
+                                {% elif today_frequency.1 > 0 %}
+                                כל
+                                    {% if today_frequency.1 == 1 %}
+                                        דקה
+                                    {% else %}
+                                    {{today_frequency.1}}
+                                        דקות
+                                    {% endif %}
+                                {% else %}
+                                  --
+                                {% endif %} 
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <span dir="rtl"  class="labelmain">מדד פופולריות לפי מפעיל<br><img src="{% static 'question_mark.png' %}" title="המיקום היחסי של הקו ביחס לקווי המפעיל, בדירוג לפי כמות נסיעות" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div dir="rtl" class="measure-wrapper">
+                                <label>{{today_popularity_among_his_agency}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <span dir="rtl"  class="labelmain">ערים<br><img src="{% static 'question_mark.png' %}" title="הערים בהם עובר הקו לאורך המסלול" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <div dir="rtl" class="measure-wrapper">
+                                {% if trip_city|length > 100 %}
+                                <span dir="rtl" class="citieslabel" style="font-size: 1.1em;">{{trip_city}}</span> 
+                                {% elif trip_city|length > 60 %}
+                                <span dir="rtl" class="citieslabel" style="font-size: 1.3em;">{{trip_city}}</span> 
+                                {% else %}
+                                <span dir="rtl" class="citieslabel">{{trip_city}}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            </div>
+            <br>
+            <hr>
+
+            <div dir="rtl" class="second-section-content-wrapper">
+                <div dir="rtl" class="protfolio-items-wrapper-hist">
+                    <div dir="rtl" class="protfolio-item-wrapper-hist">
+                        <div dir="rtl" class="protfolio-img-background"></div>
+
+                        <div dir="rtl" class="img-text-wrapper-hist">
+                            <div dir="rtl" class="logo-wrapper">
+                                <img src="data:image/png;base64,{{today_schedule_picture}}">
+                            </div>
+
+                            <!-- <div dir="rtl" class="subtitle">
+                                Here sould be the histogram
+                            </div> -->
+                        </div>
+                    </div>
+            </div>
+            </div></div></div>
+
+            <hr>
+
+            <span dir="rtl"  dir="rtl" class="labelmain"><center>לוח הזמנים של הקו</center><hr></span></br>
+
+
+
+            
+
+            <div dir="rtl" class="third-section-content-wrapper">
+                <div dir="rtl" class="protfolio-items-wrapper">
+                    <table dir="rtl" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>04-06</th>
+                                <th>06-08</th>
+                                <th>08-10</th>
+                                <th>10-12</th>
+                                <th>12-14</th>
+                                <th>14-16</th>
+                                <th>16-18</th>
+                                <th>18-20</th>
+                                <th>20-22</th>
+                                <th>22-24</th>
+                                <th>24-28</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            <tr class="active-row">
+                                {% for line in today_departure_times %}
+                                    <td>
+                                    {% for time in line %}
+                                        {{ time.0 }} {{ time.1 }}<br/>
+                                    {% endfor %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+                            <tr class="active-row">
+                                {% for line in time_differences %}
+                                    <td>
+                                        עיכוב ממוצע:<br>{{ line }}<br/>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                    <h4 align=center>(העיכוב מזמן היציאה המתוכנן, בדקות)</h4>
+                </div>
+            </div>
+
+            <hr>
+            <span dir="rtl"  class="labelmain" dir="rtl"><center>ביצועי הקו</center></span>
+            <hr>
+            <h3 dir="rtl"><center>✅נסיעות שתועדו:<br>{{number_of_actual_trips}}</center></h3>
+            <h3 dir="rtl"><center>❌נסיעות שלא תועדו:<br>{{number_of_missed_trips}}</center></h3>
+            <h3 dir="rtl"><center>�נסיעות שמצבן לא ידוע:<br>{{number_of_unknown_trips}}</center></h3></br>
+
+
+            <div dir="rtl" class="second-section-content-wrapper">
+                <div dir="rtl" class="protfolio-items-wrapper-hist">
+                    <div dir="rtl" class="protfolio-item-wrapper-hist">
+                        <div dir="rtl" class="protfolio-img-background"></div>
+
+                        <div dir="rtl" class="img-text-wrapper-hist">
+
+                            <div dir="rtl" class="logo-wrapper">
+                                <img src="data:image/png;base64,{{actual_and_missed_trips_picture}}">
+                            </div>
+
+                            <!-- <div dir="rtl" class="subtitle">
+                                Here sould be the histogram
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br><Br>
+            <hr>
+            <span dir="rtl"  class="labelmain" dir="rtl"><center>נסיעות שיצאו בזמן</center></span>
+            <hr>
+            <h4 dir="rtl"><center>מתוך הנסיעות המתועדות, נסיעה תיחשב ככזאת שיצאה בזמן אם זמן היציאה מתחנת המוצא היה <b><i><u>±5 דקות</u></i></b> ביחס לזמן היציאה המתוכנן.</center></h4>
+            <h3 dir="rtl"><center>נסיעות שיצאו בזמן:<br>{{OTP_calc.0}}</center></h3></td>
+            <h3 dir="rtl"><center>נסיעות שלא יצאו בזמן:<br>{{OTP_calc.1}}</center></h3></td>
+            
+            <h2 dir="rtl"><center>אחוז הנסיעות שיצאו בזמן (OTP):</center></h2>
+            <h1 dir="rtl"><center><span dir="rtl"  style='background-color: yellow;'>{{OTP_measure}}</span></center></h1></br>
+            
+            
+            <hr>
+            <span dir="rtl"  class="labelmain" dir="rtl"><center>מסלול הקו</center>
+            <hr></span><br>
+            <div dir="rtl" class="third-section-content-wrapper">
+                <div dir="rtl" class="protfolio-items-wrapper-stops">
+                    <table class="styled-table" dir="rtl">
+                        <thead>
+                            <tr>
+                                <th>מיקום התחנה במסלול</th>
+                                <th>שם התחנה</th>
+                                <th>קוד התחנה</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for line in list_trip_stations%}
+                            <tr class="active-row">
+                                <td>{{line.0}}</td>
+                                <td><a href="/bus_station_report/?station={{ line.3 }}&report_date={{report_date|safe}}&lang=he">{{line.1}}</a></td>
+                                <td>{{ line.2 }} <!-- stop code is shown, but the link is to the stop id --></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+{% endblock %}

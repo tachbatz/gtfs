@@ -1,0 +1,88 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Page title </title>
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static 'mysite/styles.css' %}"/>
+
+</head>
+<body>
+    <div class="container">
+
+        <div class="nav-wrapper">
+
+            <div class="left-side">
+                <div class="nav-link-wrapper ">
+                    <a href="index.html">Home</a>
+                </div>
+
+                <div class="nav-link-wrapper ">
+                    <a href="about.html">About</a>
+                </div>
+
+                <div class="nav-link-wrapper active-nav-link">
+                    <a href="form_line.html">Bus Lines</a>
+                </div>
+
+                <div class="nav-link-wrapper">
+                    <a href="form_station.html">Bus Stations</a>
+                </div>
+            </div>
+
+            <div class="right-side">
+                <div class="brand">
+                    <div>TransProtIL</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="site-header">
+            <h1>TransPortIL</h1>
+            <h2>Analyze Your Bus Trips!</h2>
+        </div>
+
+        <div class="form-content-wrapper">
+            <form class="line_form" action="lines_report/" method="GET" novalidate>
+                {%csrf_token %}
+
+                <div class="line_form__title">Bus Line</div>
+                
+                <p class="line_form__desc">
+                  Please enter the following fileds to search for a spesific bus line. 
+                </p>
+                
+                <div class="line_form__item">
+                  <label for="line_number" class="line_form__label">Line Number:</label>
+                  <input type="text" class="line_form__input line_form__input--small" name="line_number" id="line_number" min="1" max="5" placeholder="Enter the line number" value="{{current_line_number}}">                  
+                </div>
+                
+                <div class="line_form__item">
+                  <label for="city" class="line_form__label">City:</label>
+                  <input type="select" class="line_form__input " name="city" id="city"  placeholder="Select the city" value="{{current_city}}">                  
+                </div>
+                
+                <div class="line_form__item">
+                  <label for="direction" class="line_form__label">Direction:</label>
+                    <label for="direction" class="line_form__label">
+                        GO
+                        <input type="radio"  name="direction" id="direction" value="1" >
+                    </label>
+                    <label for="direction" class="line_form__label">
+                        BACK
+                        <input type="radio"  name="direction" id="direction" value="2"> 
+                    </label>            
+                </div>
+                
+                <div class="line_form__item">
+                  <button class="line_form__btn" type="submit">Submit</button>
+                </div>
+
+              </form>
+          </div>
+
+    </div>
+</body>
+</html>

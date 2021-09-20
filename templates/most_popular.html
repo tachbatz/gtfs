@@ -1,0 +1,82 @@
+{%load static%}
+<!doctype html>
+<html>
+  <head>
+    <style>
+          body {
+                background: #fff;
+                color: #444;
+                font-family: "Open Sans", sans-serif;
+                }
+      
+          a {
+              color: #50d8af;
+              transition: 0.5s;
+            }
+      
+          a:hover,
+          a:active,
+          a:focus {
+                    color: #51d8af;
+                    outline: none;
+                    text-decoration: none;
+                  }
+          
+          p {
+            padding: 0;
+            margin: 0 0 30px 0;
+          }
+          
+          h1,
+          h2,
+          h3,
+          h4,
+          h5,
+          h6 {
+            font-family: "Montserrat", sans-serif;
+            font-weight: 400;
+            margin: 0 0 20px 0;
+            padding: 0;
+          }
+    </style>
+  </head> 
+  <body> 
+<h1 align=center><u>Top 5 Most Frequent Bus Lines</u></h1>
+<h2 align=center>Of the companies:{% for agency in agencies %} {{ agency }}{% if not forloop.last %}, {% endif %}
+{% endfor %}</h2>
+<h2 align=center>As of {{current_day}}, {{current_date}}</h2>
+
+
+<style>
+  table,
+  tr,
+  td {
+    padding: 10px;
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+</style>
+
+<table border='1' align='center'>
+  <tr bgcolor=yellow><td>Company name</td><td>Line number</td><td>Line route name</td><td>Number of trips</td><td>Rank</td></tr>
+  {% for line in query %}
+    <tr>
+    {% for cell in line %}
+      <td>{{ cell }}</td>
+    {% endfor %}
+    </tr>
+    {% if forloop.counter|divisibleby:"5" %}
+      {% if not forloop.last %}
+      </table>
+      <br><br>
+      <hr>
+      <br><br>
+      <table border='1' align='center'>
+      <tr bgcolor=yellow><td>Company name</td><td>Line number</td><td>Line route name</td><td>Number of trips</td><td>Rank</td></tr>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</table><br>
+<div align=center><a href="/">Home</a></div>
+</body>
+</html>

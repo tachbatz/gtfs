@@ -1,0 +1,174 @@
+{% extends 'he/base.html' %}
+
+{% block content %}
+
+
+{%load static%}
+
+<head>
+    <meta charset="utf-8"/>
+    <title>Station {{stop_code}}</title>
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static 'mysite/styles.css' %}"/>
+
+</head>
+<body>
+
+<!--
+{% if in_update == '1' %}
+  <div dir="rtl" style='background-color: yellow; text-align: center;'>The website is currently in an update process</div>
+{%endif%}
+-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>  
+
+    <div dir="rtl" class="container">
+
+        <div dir="rtl" class="site-header">
+            <h1>ניתוח תחנה מספר {{stop_code}}</h1>
+            <h3>נכון לתאריך:
+                <form action="../bus_station_report/" method="GET" name="change_date" id="change_date">
+                    <input type=hidden name="station" value={{stop_id}}>
+                    <input type="hidden" name="lang" value="he">
+                    <input type=date name="report_date" value={{report_date}} min={{min_date}} max={{max_date}}><br><button type="submit" id="btnFetch" class="line_form__btn btn btn-primary mb-2" style='width: 135px;'>שינוי</button>
+                </form>
+            </h3>
+            <span class="labelmain">
+            <h3><a href="?station={{ stop_id }}&report_date={{report_date|safe}}&export=True">ייצוא</a></h3>
+            </span>
+        </div>
+
+       <div dir="rtl" class="content-wrapper">
+            <div dir="rtl" class="first-section-content-wrapper">
+                <div dir="rtl" class="protfolio-items-wrapper-bus-line">
+
+
+
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <h2>שם התחנה</h2>
+                            </div>
+
+                            <div dir="rtl" class="measure-wrapper">
+                                <label>{{stop_name}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <h2>כתובת התחנה</h2>
+                            </div>
+
+                            <div dir="rtl" class="measure-wrapper">
+                                <label>{{stop_adress}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <h2>הגעה מתוכננת ראשונה של אוטובוס</h2>
+                            </div>
+
+                            <div dir="rtl" class="measure-wrapper">
+                                <label>{{first_arrival}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div dir="rtl" class="protfolio-item-wrapper">
+                        <div dir="rtl" class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div dir="rtl" class="dash-text-wrapper">
+                            <div dir="rtl" class="haeder-wrapper">
+                                <h2>הגעה מתוכננת אחרונה של אוטובוס</h2>
+                            </div>
+
+                            <div dir="rtl" class="measure-wrapper">
+                                <label>{{last_arrival}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <br>
+
+            
+            
+            <div dir="rtl" class="second-section-content-wrapper">
+                <div dir="rtl" class="protfolio-items-wrapper-hist">
+                    <div dir="rtl" class="protfolio-item-wrapper-hist">
+                        <div dir="rtl" class="protfolio-img-background"></div>
+
+                        <div dir="rtl" class="img-text-wrapper-hist">
+
+                            <div dir="rtl" class="logo-wrapper">
+                                <img src="data:image/png;base64,{{histogram_hours}}"> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div dir="rtl" class="second-section-content-wrapper">
+                <div dir="rtl" class="protfolio-items-wrapper-hist">
+                    <div dir="rtl" class="protfolio-item-wrapper-hist">
+                        <div dir="rtl" class="protfolio-img-background"></div>
+
+                        <div dir="rtl" class="img-text-wrapper-hist">
+
+                            <div dir="rtl" class="logo-wrapper">
+                                <img src="data:image/png;base64,{{histogram_agencies}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <br><br>
+
+            <span dir="rtl"  class="labelmain"><hr><center>קווים שעוברים בתחנה</center><hr></span><br>
+
+            <div dir="rtl" class="third-section-content-wrapper">
+                <div dir="rtl" class="protfolio-items-wrapper">
+                    <table class="styled-table">
+                        <thead>
+                        <tr>
+                            <th>מספר קו</th>
+                            <th>שם המפעיל</th>
+                            <th>כמות מעברים בתחנה</th>
+                            <th>שילוט הקו</th>
+                            <th>מסלול הקו</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for line in routes_table%}
+                        <tr class="active-row">
+                            <td><a href="/lines_report/?line_id={{ line.0 }}&direction={{ line.3 }}&report_date={{report_date|safe}}&lang=he">{{ line.1 }}</a></td>
+                            <td>{{ line.2 }}</td>
+                            <td>{{ line.4 }}</td>
+                            <td>{{ line.5 }}</td>
+                            <td>מ-<i>{{ line.7 }}</i><br>ל-<i>{{ line.8 }}</i></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+
+{% endblock %}

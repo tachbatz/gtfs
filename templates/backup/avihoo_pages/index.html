@@ -1,0 +1,91 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Bus TAU</title>
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static 'mysite/styles.css' %}"/>
+
+</head>
+<body>
+    <div class="container">
+
+        <div class="nav-wrapper">
+
+            <div class="left-side">
+                <div class="nav-link-wrapper active-nav-link">
+                    <a href="/">Home</a>
+                </div>
+
+                <div class="nav-link-wrapper">
+                    <a href="/about/">About</a>
+                </div>
+
+                <div class="nav-link-wrapper">
+                    <a href="/create/?report=1">Bus Lines</a>
+                </div>
+
+                <div class="nav-link-wrapper">
+                    <a href="/create/?report=3">Bus Stations</a>
+                </div>
+            </div>
+
+            <div class="right-side">
+                <div class="brand">
+                    <div>BusTAU</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="site-header">
+            <h1>BusTAU</h1>
+            <h2>Analyze Your Bus Trips!</h2>
+        </div>
+
+        <div class="contant-wrapper">
+            <div class="protfolio-items-wrapper">
+                <a href="/create/?report=1"><div class="protfolio-item-wrapper">
+                    <div class="protfolio-img-background" style="background-image: url({% static 'mysite/images/protfolio1.jpg' %});"></div>
+
+                    <div class="img-text-wrapper">
+                        <div class="logo-wrapper">
+                        </div>
+
+                        <div class="subtitle">
+                            Click here to search for a bus line
+                        </div>
+                    </div>
+                </div></a>
+
+                <a href="/create/?report=3"><div class="protfolio-item-wrapper">
+                    <div class="protfolio-img-background" style="background-image: url({% static 'mysite/images/protfolio2.jpg' %});"></div>
+
+                    <div class="img-text-wrapper">
+                        <div class="logo-wrapper">
+                        </div>
+
+                        <div class="subtitle">
+                            Click here to search for a bus station
+                        </div>
+                    </div>
+                </div></a>
+
+                <div class="protfolio-item-wrapper">
+                    <div class="protfolio-img-background" style="background-image: url({% static 'mysite/images/protfolio3.jpg' %});"></div>
+
+                    <div class="img-text-wrapper">
+                        <div class="logo-wrapper">
+                        </div>
+
+                        <div class="subtitle">
+                            Click here to search by area
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

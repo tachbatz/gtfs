@@ -1,0 +1,129 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>BusTAU</title>
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static 'mysite/styles.css' %}"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Miriam+Libre">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/> <!-- favicon -->
+    <link rel="stylesheet" href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+
+    <!-- interactive button settings-->
+    <link rel="stylesheet" href="{% static 'accessibilitymenubar/icons/fontawesome5.9.0/css/all.css' %}" />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
+    <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>
+
+    
+    <!-- Accessibility Menu Bar Required Styles and Settings -->
+    <link rel="stylesheet" href="{% static 'accessibilitymenubar/css/asb.css' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    
+    <!-- CSS only 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    -->
+
+</head>
+
+<body>
+    <!-- interactive button script -->
+    <script>
+        // for each form in the current document, disable the button and change its text to "loading"
+        // along with a dedicated loading gif, only if all fields in form were filled correctly
+        $(document).ready(function() {
+            $('form').on("submit", function(){
+                        // disable button
+                        $("#btnFetch").prop("disabled", true);
+                        // add spinner to button
+                        $("#btnFetch").html(
+                        '<i class="fa fa-circle-o-notch fa-spin"></i> טוען...'
+                        );
+            });
+        });
+        </script>
+{% if in_update == '1' %}
+  <div dir="rtl"  style='background-color: yellow; text-align: center;'>האתר כרגע מתעדכן</div>
+{% endif %}
+
+    <div dir="rtl"  class="container">
+
+        <div dir="rtl"  class="nav-wrapper">
+
+            <div dir="rtl"  class="left-side">
+                {% if request.path == '/' %}
+                    <div dir="rtl"  class="nav-link-wrapper active-nav-link">
+                {% else %}
+                    <div dir="rtl"  class="nav-link-wrapper">
+                {% endif %}
+                    <a href="/?lang=he">ראשי</a>
+                </div>
+
+                {% if 'about' in request.path %}
+                    <div dir="rtl"  class="nav-link-wrapper active-nav-link">
+                {% else %}
+                    <div dir="rtl"  class="nav-link-wrapper">
+                {% endif %}
+                    <a href="/about/?lang=he">אודות</a>
+                </div>
+
+                {% if 'line' in request.path %}
+                    <div dir="rtl"  class="nav-link-wrapper active-nav-link">
+                {% else %}
+                    <div dir="rtl"  class="nav-link-wrapper">
+                {% endif %}
+                    <a href="/line_form/?lang=he">ניתוח קו אוטובוס</a>
+                </div>
+                
+
+                {% if 'station' in request.path %}
+                    <div dir="rtl"  class="nav-link-wrapper active-nav-link">
+                {% else %}
+                    <div dir="rtl"  class="nav-link-wrapper">
+                {% endif %}
+                    <a href="/station_form/?lang=he">ניתוח תחנת אוטובוס</a>
+                </div>
+                
+                {% if 'agency' in request.path %}
+                    <div dir="rtl"  class="nav-link-wrapper active-nav-link">
+                {% else %}
+                    <div dir="rtl"  class="nav-link-wrapper">
+                {% endif %}
+                    <a href="/agency_form/?lang=he">ניתוח מפעיל שירות</a>
+                </div>
+            
+            </div>
+            
+
+
+            <div dir="rtl"  class="right-side">
+                <div dir="rtl"  class="brand">
+                    <div dir="rtl"><a href="/">English</a></div>
+                </div>
+            </div>
+        </div>
+        
+        <div dir="rtl"  class="site-header">
+          <h1><a href="/?lang=he"><img src="{% static 'websitelogo_3.png' %}"  style='width: 660px; height: 96px;'></a>&nbsp;&nbsp;&nbsp;&nbsp;</h1>
+          <h2>Israel Public Bus Transit Analysis</h2>
+        </div>
+        {% block content %}
+        {% endblock %}
+        
+        <!-- Accessibility Menu Bar - https://github.com/brenonovelli/Accessibility-Settings-Bar -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+        <script type="text/javascript" src="{% static 'accessibilitymenubar/js/asb_he.js' %}"></script>
+        <!-- Accessibility Menu Bar - https://github.com/brenonovelli/Accessibility-Settings-Bar -->
+
+        <!-- JavaScript Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+</body>
+</html>

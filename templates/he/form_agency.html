@@ -1,0 +1,47 @@
+{% extends 'he/base.html' %}
+
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    $("#agency_form").on("submit", function(){
+      $("#pageloader").fadeIn();
+    });//submit
+  });//document ready
+</script>  
+
+<div dir="rtl"  class="form-content-wrapper">
+  <div dir="rtl"  class="line_form__title"> חיפוש עבור מפעיל</div>
+          
+  <p dir="rtl"  class="line_form__desc">
+   על מנת להמשיך, יש לבחור במפעיל מתוך הרשימה הבאה.
+  </p>
+    <form class="line_form" action="../agency_report/" method="GET" id="agency_form" name="agency_form">
+      <input type="hidden" name="lang" value="he">
+        {%csrf_token %}
+
+        
+        <div dir="rtl"  class="line_form__item">
+          <label for="agency" class="line_form__label">מפעיל:</label>
+          <select name="agency" label="Agencies" required>
+          {% for agency in agencies %}
+            <option value="{{agency.0}}">{{agency.1}}</option>
+          {% endfor %}
+          </select>                
+        </div>
+        <div dir="rtl"  class="line_form__item">
+          <label for="start">תאריך:</label>
+          <input type="date" id="start" class="date" name="report_date" value={{current_date}} min={{min_date}} max={{current_date}} required>
+          <span dir="rtl"  style='color: red;'>{{error}}</span>
+        </div>
+        
+        <div dir="rtl"  class="line_form__item">
+          <button type="submit" id="btnFetch" class="line_form__btn btn btn-primary mb-2">שלח</button>
+        </div>
+
+        </div>
+      </form>
+</div>
+
+{% endblock %}

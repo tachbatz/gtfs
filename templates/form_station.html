@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<div class="form-content-wrapper">
+  <div class="line_form__title">Bus Stations Drilldown Search Form</div>
+    
+  <p class="line_form__desc">
+    In order to continue, please choose a city and then choose the desired station from the list.
+  </p>
+  </div>
+  <form class="line_form" id='station_form' data-station-url="{% url 'ajax_load_stops' %}" action="../bus_station_report/" method="GET">
+    {%csrf_token %}
+
+    
+    <div class="line_form__item">
+      <label for="city" class="line_form__label">City:</label>
+      <select id="stop_city" name="stop_city" required>
+        <option value="">----------</option>
+        {% for city in cities %}
+        <option value="{{ city }}">{{ city }}</option>
+        {% endfor %}
+      </select>            
+    </div>
+
+    <div class="line_form__item">
+      <label for="stop_desc" class="line_form__label">Station Name:</label>
+      <select id="station" name="station" required>
+        <option value="">----------</option>
+      </select>            
+    </div>
+
+
+    <div class="line_form__item">
+      <label for="start">Date:</label>
+      <input type="date" id="start" name="report_date" class="date" value={{current_date}} min={{min_date}} max={{current_date}} required>
+      <span style='color: red;'>{{error}}</span>
+    </div>
+
+    <div class="line_form__item">
+      <button type="submit" id="btnFetch" class="line_form__btn btn btn-primary mb-2">Submit</button>
+    </div>
+
+  </form>
+
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+  <script>
+    
+    $("#stop_city").change(function () {
+      const url = $("#station_form").attr('data-station-url');  // get the url of the `load_lines` view
+      const stopCity = $(this).val();  // get the selected origin city from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= ajax/load-cities/ )
+        data: {
+            'stop_city': stopCity       // add the origin city to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_lines` view function
+            console.log(data);
+            $("#station").html(data);  // replace the contents of the line number input with the data that came from the server
+        }
+      });
+    });
+  </script>
+</div>
+
+{% endblock %}

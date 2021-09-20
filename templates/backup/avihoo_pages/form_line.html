@@ -1,0 +1,94 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Bus Lines Drilldown Search</title>
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static 'mysite/styles.css' %}"/>
+
+</head>
+<body>
+    <div class="container">
+
+        <div class="nav-wrapper">
+
+            <div class="left-side">
+                <div class="nav-link-wrapper ">
+                    <a href="/">Home</a>
+                </div>
+
+                <div class="nav-link-wrapper ">
+                    <a href="/about/">About</a>
+                </div>
+
+                <div class="nav-link-wrapper active-nav-link">
+                    <a href="/create/?report=1">Bus Lines</a>
+                </div>
+
+                <div class="nav-link-wrapper">
+                    <a href="/create/?report=3">Bus Stations</a>
+                </div>
+            </div>
+
+            <div class="right-side">
+                <div class="brand">
+                    <div>BusTAU</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="site-header">
+            <h1>BusTAU</h1>
+            <h2>Analyze Your Bus Trips!</h2>
+        </div>
+
+        <div class="form-content-wrapper">
+            <form class="line_form" action="lines_report/" method="GET" >
+                {%csrf_token %}
+
+                <div class="line_form__title">Bus Lines Drilldown Search Form</div>
+                
+                <p class="line_form__desc">
+                  Please enter the following fields in order to search for a specific bus line. 
+                </p>
+                
+                <p class="line_form__desc">
+                  <i>Each input of the following fields will apply automatic filter to the other fields in the future</i>
+                </p>
+                
+                <div class="line_form__item">
+                  <label for="line_number" class="line_form__label">Line Number:</label>
+                  <input type="text" class="line_form__input line_form__input--small" name="line_number" id="line_number" min="1" max="5" placeholder="Enter the line number" value="{{current_line_number}}" required>                  
+                </div>
+                
+                <div class="line_form__item">
+                  <label for="city" class="line_form__label">City:</label>
+                  <input type="select" class="line_form__input " name="city" id="city"  placeholder="Select the city" value="{{current_city}}" required>                  
+                </div>
+                
+                <div class="line_form__item">
+                  <label for="direction" class="line_form__label">Direction:</label>
+                    <label for="direction" class="line_form__label">
+                        <input type="radio"  name="direction" id="direction" value="1" required>
+                        Direction 1
+                        <input type="radio"  name="direction" id="direction" value="2" required>
+                        Direction 2 
+                    </label>
+                    <!-- <label for="direction" class="line_form__label">
+                        <input type="radio"  name="direction" id="direction" value="2"> 
+                        Direction 2
+                    </label> -->           
+                </div>
+                
+                <div class="line_form__item">
+                  <button class="line_form__btn" type="submit">Submit</button>
+                </div>
+
+            </form>
+        
+        </div>
+
+    </div>
+</body>
+</html>

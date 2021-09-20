@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="form-content-wrapper">
+  <div class="line_form__title">Bus Lines Drilldown Search Form</div>
+          
+          <p class="line_form__desc">
+            In order to continue, please select a city, a line number, a direction and a date.
+          </p>
+
+  </div> 
+
+    <form class="line_form" id='line_form' data-lines-url="{% url 'ajax_load_lines' %}" data-directions-url="{% url 'ajax_load_directions' %}" action="../lines_report/" method="GET" >
+          <div class="line_form__item">
+            <label for="city" class="line_form__label">City:</label>
+            <select id="origin_city" name="origin_city" required>
+              <option value="">----------</option>
+              {% for city in cities %}
+              <option value="{{ city }}">{{ city }}</option>
+              {% endfor %}
+            </select>
+          </div>
+    
+        
+        <div class="line_form__item">
+          <label for="line_number" class="line_form__label">Line Number:</label>
+          <select id="line_id" name="line_id" required>
+            <option value="">----------</option>
+          </select>
+        </div>
+        
+        <div class="line_form__item">
+          <label for="direction" class="line_form__label" required>Direction:</label>
+          <select id="directionC" name="direction" required>
+            <option value="">----------</option>
+          </select>         
+        </div>
+        
+        <div class="line_form__item">
+          <label for="date" class="line_form__label">Date:</label>
+          <span for="date" class="inputlabel"><input type="date" class="date" id="start" name="report_date" value={{current_date}} min={{min_date}} max={{current_date}} required></span>
+          <span style='color: red;'>{{error}}</span>
+        </div>
+        
+        <input id="direction_flag" name="direction_flag" type="hidden" value=0>
+        
+        <div class="line_form__item">
+          <button type="submit" id="btnFetch" class="line_form__btn btn btn-primary mb-2">Submit</button>
+        </div>
+      
+    </form>
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<script>
+    var stopCity = ""
+    $("#origin_city").change(function () {
+      const url = $("#line_form").attr('data-lines-url');  // get the url of the `load_lines` view
+      var stopCity = $(this).val();  // get the selected origin city from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+          url: url,                    // set the url of the request (= ajax/load-cities/ )
+          data: {
+              'stop_city': stopCity       // add the origin city to the GET parameters
+          },
+          success: function (data) {   // `data` is the return of the `load_lines` view function
+              console.log(data);
+              $("#line_id").html(data);  // replace the contents of the line number input with the data that came from the server
+          }
+      });
+    });
+</script>
+<script>
+    $("#line_id").change(function () {
+      const url = $("#line_form").attr('data-directions-url');
+      const lineId = $(this).val();  // get the selected line ID from the HTML input
+      console.log(lineId);
+      const  stopCity = document.getElementById('origin_city').value;
+      console.log(stopCity);
+      $.ajax({                       // initialize an AJAX request
+          url: url,  // set the url of the request (= ajax/load-directions/ )
+          data: {
+              'line_id': lineId,          // add the line ID to the GET parameters
+              'stop_city': stopCity       // add the stop city to the GET parameters
+          },
+          success: function (data) {   // `data` is the return of the `load_directions` view function
+              console.log(data);
+              $("#directionC").html(data);  // replace the contents of the direction input with the data that came from the server
+          }
+      });
+    });
+  
+  </script>
+  
+</div>
+
+{% endblock %}
+
+
+
+
+

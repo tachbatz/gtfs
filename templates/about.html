@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="content-wrapper">
+    <div class="two-column-wrapper">
+      <div class="profile-image-wrapper">
+        {% load static %}
+        <img src="{% static 'mysite/images/logos/TAU-logo.jpg' %}">
+        <img src="{% static 'mysite/images/logos/TAUAcademic.jpg' %}">
+      </div>
+
+      <div class="profile-content-wrapper">
+        <h1>Hi, thanks for visiting our site.</h1>
+        <p>This site main goal is to provide the public an open-source user-friendly service that allows a wide range of users to access historical analyzed Israeli public transport data at any time, with the option to examine the accumulated data objectively, based on reliable, consistent, and publicly well-known, recognized measurements.
+        </p>
+
+        <p>This project was carried out in parallel work of two main teams, the Big Data team and the Business Intelligence team.</p>
+        <p> The Big Data team is responsible for the real-time flow of information from the Ministry of Transport's SIRI-SM interface to the project database.</p>
+        <p>The Business Intelligence team is responsible for the extraction of static information in GTFS format from the Ministry of Transport and performing preliminary processing on the data.The team defines a well dedicated relational database within which the data will be collected. In addition, the team defines valid metrics based on which the data will be analyzed, as well as the establishment, design and entering of the data and metrics received in different sections according to the user's wishes.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,144 @@
+{%load static%}
+<!doctype html>
+<html>
+  <head>
+    <style>
+          body {
+                background: #fff;
+                color: #444;
+                font-family: "Open Sans", sans-serif;
+                text-align: center;
+                }
+      
+          a {
+              color: #50d8af;
+              transition: 0.5s;
+            }
+      
+          a:hover,
+          a:active,
+          a:focus {
+                    color: #51d8af;
+                    outline: none;
+                    text-decoration: none;
+                  }
+          
+          p {
+            padding: 0;
+            margin: 0 0 30px 0;
+          }
+          
+          h1,
+          h2,
+          h3,
+          h4,
+          h5,
+          h6 {
+            font-family: "Montserrat", sans-serif;
+            font-weight: 400;
+            margin: 0 0 20px 0;
+            padding: 0;
+          }
+ 
+          .styled-table {
+                border-collapse: collapse;
+                margin-left:auto; 
+                margin-right:auto;
+                font-size: 0.9em;
+                font-family: sans-serif;
+                min-width: 400px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+                align: center;
+                width: 100%;
+            }
+            .styled-table thead tr {
+                background-color: #009879;
+                color: #0560a1;
+                text-align: center;
+            }
+            .styled-table th{
+                padding: 12px 15px;
+                text-align: center;
+                color: #074a7a;
+            }
+            .styled-table td {
+                padding: 12px 15px;
+                text-align: center;
+            }
+            .styled-table tbody tr {
+                border-bottom: 1px solid #dddddd;
+                text-align: center;
+            }
+            
+            .styled-table tbody tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+            
+            .styled-table tbody tr:last-of-type {
+                border-bottom: 2px solid #0560a1;
+            }
+            .styled-table tbody tr.active-row {
+                font-weight: bold;
+                color: #30acd9;
+            }
+    </style>
+  </head> 
+  <body>
+
+
+        <h1 align=center><u>Line {{line_number}} Stations of {{agency_name}}</u></h1>
+        <h2 align=center>City: {{city}}, Direction: {{directionstr}}</h2>
+        <h2 align=center>{{route_name}}</h2>
+        
+      
+      
+ 
+            <table class="styled-table">
+              <tr class="active-row">
+                <td>Estimated travel time</td><td>Estimated avarage speed (KMH)</td><td>Length travel (KM)</td>  
+              </tr>
+              <tr class="active-row">
+                <td>{{estimated_travel_time}}</td><td>{{estimated_avarage_speed}}</td><td>{{length_travel}}</td>  
+              </tr>
+              
+              <tr class="active-row">
+                <td>Avarege distance between stops </td><td>Min distance between stops</td><td>Max distance between stops</td>  
+              </tr>
+              <tr class="active-row">
+                <td>{{average_distance_between_stops}}</td><td>{{min_distance}}</td><td>{{max_distance}}</td>  
+              </tr>
+              
+              <tr class="active-row">
+                <td>Number of trips for today </td><td>First trip today</td><td>Last trip today</td>  
+              </tr>
+              <tr class="active-row">
+                <td>{{number_trip_today}}</td><td>{{first_trip}}</td><td>{{last_trip}}</td>  
+              </tr>
+              
+              <tr class="active-row">
+                <td>Frequency </td><td>Today's route popularity by agency</td><td>Route goes via</td>  
+              </tr>
+              <tr class="active-row">
+                <td>{{today_frequency}}</td><td>{{today_popularity_among_his_agency}}</td><td>{{trip_city}}</td>  
+              </tr>
+            </table>
+
+
+          <img src="data:image/png;base64,{{picture}}" alt="" height="500" , width="1000">
+          <table class="styled-table">
+            <tr ><td># station</td><td>station's name</td><td>station's code</td></tr>
+            {% for line in list_trip_stations %}
+              <tr class="active-row">
+              {% for cell in line %}
+                  <td>{{ cell }}</td>      
+              {% endfor %}
+              </tr>
+            {% endfor %}
+          </table>
+          
+          <div align=center><a href="/">Home</a></div>
+
+    
+  </body>  
+</html>
+<!-- <td>distance from the first station (meter)</td> -->

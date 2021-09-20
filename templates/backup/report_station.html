@@ -1,0 +1,116 @@
+{%load static%}
+<!doctype html>
+<html>
+  <head>
+    <style>
+          body {
+                background: #fff;
+                color: #444;
+                font-family: "Open Sans", sans-serif;
+                text-align: center;
+                }
+      
+          a {
+              color: #50d8af;
+              transition: 0.5s;
+            }
+      
+          a:hover,
+          a:active,
+          a:focus {
+                    color: #51d8af;
+                    outline: none;
+                    text-decoration: none;
+                  }
+          
+          p {
+            padding: 0;
+            margin: 0 0 30px 0;
+          }
+          
+          h1,
+          h2,
+          h3,
+          h4,
+          h5,
+          h6 {
+            font-family: "Montserrat", sans-serif;
+            font-weight: 400;
+            margin: 0 0 20px 0;
+            padding: 0;
+          }
+ 
+          .styled-table {
+                border-collapse: collapse;
+                margin-left:auto; 
+                margin-right:auto;
+                font-size: 0.9em;
+                font-family: sans-serif;
+                min-width: 400px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+                align: center;
+                width: 100%;
+            }
+            .styled-table thead tr {
+                background-color: #009879;
+                color: #0560a1;
+                text-align: center;
+            }
+            .styled-table th{
+                padding: 12px 15px;
+                text-align: center;
+                color: #074a7a;
+            }
+            .styled-table td {
+                padding: 12px 15px;
+                text-align: center;
+            }
+            .styled-table tbody tr {
+                border-bottom: 1px solid #dddddd;
+                text-align: center;
+            }
+            
+            .styled-table tbody tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+            
+            .styled-table tbody tr:last-of-type {
+                border-bottom: 2px solid #0560a1;
+            }
+            .styled-table tbody tr.active-row {
+                font-weight: bold;
+                color: #30acd9;
+            }
+    </style>
+  </head> 
+  <body>
+      <h1 align=center><u> Bus lines in station {{station}}</u></h1>
+      <table>
+        <tr>
+          <td>Station name</td><td>Station adress</td><td>First arrive</td><td>Last arrive</td>
+        </tr>
+        <tr>
+        {% for cell in values  %}
+           <td>{{cell}}</td>
+         {% endfor %}
+        </tr>
+      </table>
+
+      <img src="data:image/png;base64,{{hours_histo}}" alt="" height="500" , width="1000">
+      <img src="data:image/png;base64,{{agencies_histo}}" alt="" height="500" , width="1000">
+      <table class="styled-table">
+            <tr class="active-row">
+              <td>Line number</td><td>Agency name</td><td>Number of trips for today</td><td>Trip headsign</td><td>Route</td>    
+            </tr>
+            {% for line in table %}
+              <tr class="active-row">
+              {% for cell in line %}
+                  <td>{{ cell }}</td>      
+              {% endfor %}
+              </tr>
+            {% endfor %}
+          </table>
+     <div align=center><a href="/">Home</a></div>
+  </body>  
+</html>
+<!--   commet  -->

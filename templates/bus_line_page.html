@@ -1,0 +1,485 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{%load static%}
+
+
+<!--
+{% if in_update == '1' %}
+  <div style='background-color: yellow; text-align: center;'>The website is currently in an update process</div>
+{%endif%}
+-->
+
+
+
+        <!-- <div class="site-header">
+            <h1>TransPortIL</h1>
+            <span class="labelmain">Analyze Your Bus Trips!</span>
+        </div> -->
+        
+
+        <div class="site-header">
+          <h1><u>Line {{line_number}} of {{agency_name}}</u></h1>
+          <span class="labelmain">From {{ route_name.0 }}<br>To {{ route_name.1 }}<br>Directions: 
+            {% for cell in directions %}
+                {% if cell != direction %}
+                    <a href="?line_id={{ line_id }}&direction={{ cell }}&report_date={{report_date|safe}}">{{ cell }}</a> |
+                {% else %}
+                    {{ cell }} |
+            {% endif %}
+            {% endfor %}</span><br>
+            
+            <form action="../lines_report/" method="GET">
+                <input type=hidden name="direction" value={{direction}}>
+                <input type=hidden name="line_id" value={{line_id}}>
+                <h2>Report Date:</h2> <input type=date name="report_date" value={{report_date}} min={{min_date}} max={{max_date}}><br>
+                <button type="submit" id="btnFetch" class="line_form__btn btn btn-primary mb-2" style='width: 175px;'>Change</button>
+            </form>
+            <span class="labelmain">
+            <h3><a href="?line_id={{ line_id }}&direction={{ direction }}&report_date={{report_date|safe}}&export=True">Export</a></h3>
+            </span> 
+                
+
+
+
+          
+          <!-- <div class="site-header">
+            <h1>TransPortIL</h1>
+            <span class="labelmain">Analyze Your Bus Trips!</span>
+            <a href="?line_number={{ line_number }}&city={{ city }}&direction=1&report_date={{report_date|safe}}">1</a> | <a href="?line_number={{ line_number }}&city={{ city }}&direction=2&report_date={{report_date|safe}}">2</a>
+        </div> -->
+          
+        </div>
+        
+        <div class="third-section-content-wrapper">
+            {% if alternative_flag == 1 %}
+            <h4 align='center'>Line's Alternatives:</h4>
+              <table class="styled-table" style="width: 75%;">
+                {% for line in alternatives %}
+                  <tr>
+                  {% for cell in line %}
+                    <td>
+                    {{ cell }}
+                    </td>
+                  {% endfor %}
+                  </tr>
+                {% endfor %}
+              </table>    
+            {% else %}
+            <h4 align='center'>There are no alternative routes for this line in the chosen direction</h4>
+          {% endif %}
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="first-section-content-wrapper">
+                <div class="protfolio-items-wrapper-bus-line">
+
+                    <!---- now should be a list of data that containes the measurements that you calculated-->
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <span class="labelmain">Estimated Travel Time<br><img src="{% static 'question_mark.png' %}" title="The planned time to reach the line's destination from the line's origin, with respect to direction {{ direction }}" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="measure-wrapper">
+                                <label>
+                                    {% if estimated_travel_time.0 > 0 %}
+                                    
+                                    {% if estimated_travel_time.0 == 1 %}
+                                        1 hour
+                                    {% else %}
+                                    {{estimated_travel_time.0}}
+                                        hours
+                                    {% endif %}
+                                   and {{estimated_travel_time.1}}
+                                   {% if estimated_travel_time.1 == 1 %}
+                                        minute
+                                    {% else %}
+                                        minutes
+                                    {% endif %}
+                                {% elif estimated_travel_time.1 > 0 %}
+                                
+                                    {% if estimated_travel_time.1 == 1 %}
+                                        1 minute
+                                    {% else %}
+                                    {{estimated_travel_time.1}}
+                                        minutes
+                                    {% endif %}
+                                {% else %}
+                                  --
+                                {% endif %} 
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <span class="labelmain">Estimated Average Speed<br><img src="{% static 'question_mark.png' %}" title="The planned average speed of the line" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="measure-wrapper">
+                                <label style='margin: auto;'>{{estimated_avarage_speed}} Km/h</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <span class="labelmain">Travel Length<br><img src="{% static 'question_mark.png' %}" title="The number of kilometers the line will reach in its route, with respect to direction {{ direction }}" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="measure-wrapper">
+                                <label>{{length_travel}} Km</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <span class="labelmain">Average Distance Between Stops<br><img src="{% static 'question_mark.png' %}" title="The average distance the line will go between each station along the route, with respect to direction {{ direction }}" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="measure-wrapper">
+                                <label>{{average_distance_between_stops}} Km</label>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            
+            <br>
+                    
+                    
+                    
+        <div class="content-wrapper">
+            <div class="first-section-content-wrapper">
+                <div class="protfolio-items-wrapper-bus-line">
+
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <span class="labelmain">Min Distance Between Stops<br><img src="{% static 'question_mark.png' %}" title="The minimum distance between stops along the route, with respect to direction {{ direction }}" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="measure-wrapper">
+                                <label>{{min_distance}} Km</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <span class="labelmain">Max Distance Between Stops<br><img src="{% static 'question_mark.png' %}" title="The maximum distance between stops along the route, with respect to direction {{ direction }}" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="measure-wrapper">
+                                <label>{{max_distance}} Km</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <span class="labelmain">Number of Today's Trips<br><img src="{% static 'question_mark.png' %}" title="The total number of trips planned for this line, with respect to direction {{ direction }}" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="measure-wrapper">
+                                <label>{{number_trip_today}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <span class="labelmain">First Trip for Today<br><img src="{% static 'question_mark.png' %}" title="The time in which the line start its service" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="measure-wrapper">
+                                <label>{{first_trip}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+                    
+                    
+                    <br>
+                    
+                    
+        <div class="content-wrapper">
+            <div class="first-section-content-wrapper">
+                <div class="protfolio-items-wrapper-bus-line">
+
+
+
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <span class="labelmain">Last Trip for Today<br><img src="{% static 'question_mark.png' %}" title="The time in which the line stop its service" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="measure-wrapper">
+                                <label>{{last_trip}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <span class="labelmain">Averaged Frequency for Today<br><img src="{% static 'question_mark.png' %}" title="How often the line departs from the origin station, which respect to the chosen direction" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="measure-wrapper">
+                                <label>
+                                {% if today_frequency.0 > 0 %}
+                                
+                                Every {{today_frequency.0}}
+                                    {% if today_frequency.0 == 1 %}
+                                        hour
+                                    {% else %}
+                                        hours
+                                    {% endif %}
+                                   and {{today_frequency.1}}
+                                   {% if today_frequency.1 == 1 %}
+                                        minute
+                                    {% else %}
+                                        minutes
+                                    {% endif %}
+                                {% elif today_frequency.1 > 0 %}
+                                Every {{today_frequency.1}}
+                                
+                                    {% if today_frequency.1 == 1 %}
+                                        minute
+                                    {% else %}
+                                        minutes
+                                    {% endif %}
+                                {% else %}
+                                  --
+                                {% endif %} 
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <span class="labelmain">Popularity Measurement by Agency<br><img src="{% static 'question_mark.png' %}" title="The position of the line in the list of total number of trips for each of the agency's lines" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="measure-wrapper">
+                                <label>{{today_popularity_among_his_agency}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protfolio-item-wrapper">
+                        <div class="protfolio-img-background-mesurment" style="background-image: url({% static 'mysite/images/gray-background.jpg' %});"></div>
+
+                        <div class="dash-text-wrapper">
+                            <div class="haeder-wrapper">
+                                <span class="labelmain">Cities<br><img src="{% static 'question_mark.png' %}" title="The cities in which the line visits along its route" style='width: 20px; height: 20px;'></span>
+                            </div>
+                            <br>
+                            <div class="measure-wrapper">
+                                {% if trip_city|length > 100 %}
+                                <span class="citieslabel" style="font-size: 1.1em;">{{trip_city}}</span> 
+                                {% elif trip_city|length > 60 %}
+                                <span class="citieslabel" style="font-size: 1.3em;">{{trip_city}}</span> 
+                                {% else %}
+                                <span class="citieslabel">{{trip_city}}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            </div>
+            <br>
+            <hr>
+
+            <div class="second-section-content-wrapper">
+                <div class="protfolio-items-wrapper-hist">
+                    <div class="protfolio-item-wrapper-hist">
+                        <div class="protfolio-img-background"></div>
+
+                        <div class="img-text-wrapper-hist">
+                            <div class="logo-wrapper">
+                                <img src="data:image/png;base64,{{today_schedule_picture}}">
+                            </div>
+
+                            <!-- <div class="subtitle">
+                                Here sould be the histogram
+                            </div> -->
+                        </div>
+                    </div>
+            </div>
+            </div></div></div>
+
+            <hr>
+
+            <span class="labelmain"><center>Line's Schedule for Today</center><hr></span></br>
+
+
+
+            
+
+            <div class="third-section-content-wrapper">
+                <div class="protfolio-items-wrapper">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>04-06</th>
+                                <th>06-08</th>
+                                <th>08-10</th>
+                                <th>10-12</th>
+                                <th>12-14</th>
+                                <th>14-16</th>
+                                <th>16-18</th>
+                                <th>18-20</th>
+                                <th>20-22</th>
+                                <th>22-24</th>
+                                <th>24-28</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            <tr class="active-row">
+                                {% for line in today_departure_times %}
+                                    <td>
+                                    {% for time in line %}
+                                        {{ time.0 }} {{ time.1 }}<br/>
+                                    {% endfor %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+                            <tr class="active-row">
+                                {% for line in time_differences %}
+                                    <td>
+                                        Avg. Delay:<br>{{ line }}<br/>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                    <h4 align=center>(Departure time delay, in minutes)</h4>
+                </div>
+            </div>
+
+            <hr>
+            <span class="labelmain"><center>Line's performance for Today</center></span>
+            <hr>
+            <h3><center>✅Recorded trips:<br>{{number_of_actual_trips}}</center></h3>
+            <h3><center>❌Unrecorded trips:<br>{{number_of_missed_trips}}</center></h3>
+            <h3><center>�Unknown trips:<br>{{number_of_unknown_trips}}</center></h3></br>
+
+
+            <div class="second-section-content-wrapper">
+                <div class="protfolio-items-wrapper-hist">
+                    <div class="protfolio-item-wrapper-hist">
+                        <div class="protfolio-img-background"></div>
+
+                        <div class="img-text-wrapper-hist">
+
+                            <div class="logo-wrapper">
+                                <img src="data:image/png;base64,{{actual_and_missed_trips_picture}}">
+                            </div>
+
+                            <!-- <div class="subtitle">
+                                Here sould be the histogram
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br><Br>
+            <hr>
+            <span class="labelmain"><center>On Time Performance</center></span>
+            <hr>
+            <h4><center>Out of the recorded trips, a trip is considered as On-Time if the actual departure time from the origin station is <b><i><u>±5 minutes</u></i></b> than the planned departure time.</center></h4>
+            <h3><center>On-Time trips:<br>{{OTP_calc.0}}</center></h3></td>
+            <h3><center>Not On-Time trips:<br>{{OTP_calc.1}}</center></h3></td>
+            
+            <h2><center>On-Time Performance (OTP):</center></h2>
+            <h1><center><span style='background-color: yellow;'>{{OTP_measure}}</span></center></h1></br>
+            
+            
+            <hr>
+            <span class="labelmain"><center>Stations in Line</center>
+            <hr></span><br>
+            <div class="third-section-content-wrapper">
+                <div class="protfolio-items-wrapper-stops">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Sequence in Route</th>
+                                <th>Station's Name</th>
+                                <th>Station's Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for line in list_trip_stations%}
+                            <tr class="active-row">
+                                <td>{{line.0}}</td>
+                                <td><a href="/bus_station_report/?station={{ line.3 }}&report_date={{report_date|safe}}">{{line.1}}</a></td>
+                                <td>{{ line.2 }} <!-- stop code is shown, but the link is to the stop id --></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+{% endblock %}
