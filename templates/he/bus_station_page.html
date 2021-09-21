@@ -113,7 +113,8 @@
                         <div dir="rtl" class="img-text-wrapper-hist">
 
                             <div dir="rtl" class="logo-wrapper">
-                                <img src="data:image/png;base64,{{histogram_hours}}"> 
+                                <!-- <img src="data:image/png;base64,{{histogram_hours}}">  -->
+                                {{ histogram_hours_interactive_graph|safe }}
                             </div>
                         </div>
                     </div>
@@ -129,7 +130,8 @@
                         <div dir="rtl" class="img-text-wrapper-hist">
 
                             <div dir="rtl" class="logo-wrapper">
-                                <img src="data:image/png;base64,{{histogram_agencies}}">
+                                <!-- <img src="data:image/png;base64,{{histogram_agencies}}"> -->
+                                {{ histogram_agencies_interactive|safe }}
                             </div>
                         </div>
                     </div>

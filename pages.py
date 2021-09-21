@@ -200,14 +200,14 @@ def reports_for_line(line_id, city, direction, report_date, lang):
   hours=["04 - 06", "06 - 08", "08 - 10", "10 - 12" , "12 - 14",
          "14 - 16", "16 - 18" , "18 - 20" , "20 - 22", "22 - 24", "24 - 28"] # histogram hours ranges.
 
-  title = 'Number of Trips, Divided Into Hour Ranges' if lang=='en' else 'כמות הנסיעות שהקו מבצע, בחלוקה לטווחי שעות'[::-1]
-  y_axis = 'Number of Trips' if lang=='en' else 'מספר נסיעות'[::-1]
-  x_axis = 'Hour Range' if lang=='en' else 'טווחי שעות'[::-1]
+  title = 'Number of Trips, Divided Into Hour Ranges' if lang=='en' else 'כמות הנסיעות שהקו מבצע, בחלוקה לטווחי שעות'
+  y_title = 'Number of Trips' if lang=='en' else 'מספר נסיעות'
+  x_title = 'Hour Range' if lang=='en' else 'טווחי שעות'
 
-  picture = histogram_picture(hours,histogram_list_trip_per_hours(today_schedule_times),x_axis,y_axis,title) # histogram picture of route departure for today
-  values_to_render['today_schedule_picture'] = picture #add value to dictionary.
+  # picture = histogram_picture(hours,histogram_list_trip_per_hours(today_schedule_times),x_axis,y_axis,title) # histogram picture of route departure for today
+  # values_to_render['today_schedule_picture'] = picture #add value to dictionary.
 
-  interactive_graph = histogram_plotly(hours, histogram_list_trip_per_hours(today_schedule_times), title)
+  interactive_graph = histogram_plotly(hours, histogram_list_trip_per_hours(today_schedule_times), x_title, y_title, title)
   values_to_render['interactive_graph'] = interactive_graph
   
   # directions of route
@@ -252,28 +252,41 @@ def reports_for_line(line_id, city, direction, report_date, lang):
   prec_of_unknown_trips = int(100*values_to_render['number_of_unknown_trips']/number_trip_today)
 
   if lang=='en': # if the currently used language is English
+    title = 'Trips'
+    group_title = 'Classification'
+    number_title = 'Number of trips'
     if values_to_render['number_of_unknown_trips'] == 0:
       labels = 'Recorded Trips','Unrecorded Trips'
       sizes = [ prec_of_actual_trips , prec_of_missed_trips ]
+      numbers = [values_to_render['number_of_actual_trips'], values_to_render['number_of_missed_trips']]
     elif prec_of_unknown_trips == 100:
       labels = 'Unknown Trips',
       sizes = [ prec_of_unknown_trips ]
+      numbers = [values_to_render['number_of_unknown_trips']]
     else:
       labels = 'Recorded Trips','Unrecorded Trips','Unknown Trips'
       sizes = [ prec_of_actual_trips , prec_of_missed_trips, prec_of_unknown_trips]
+      numbers = [values_to_render['number_of_actual_trips'], values_to_render['number_of_missed_trips'], values_to_render['number_of_unknown_trips']]
   else:
+    title = 'נסיעות'
+    group_title = '\nסיווג'
+    number_title = '\nמספר נסיעות'
     if values_to_render['number_of_unknown_trips'] == 0:
-      labels = 'נסיעות מתועדות'[::-1], 'נסיעות לא מתועדות'[::-1]
+      labels = 'נסיעות-מתועדות', 'נסיעות-לא-מתועדות'
       sizes = [ prec_of_actual_trips , prec_of_missed_trips ]
+      numbers = [values_to_render['number_of_actual_trips'], values_to_render['number_of_missed_trips']]
     elif prec_of_unknown_trips == 100:
-      labels = 'נסיעות לא ידועות'[::-1],
+      labels = 'נסיעות-לא-ידועות'
       sizes = [ prec_of_unknown_trips ]
+      numbers = [values_to_render['number_of_unknown_trips']]
     else:
-      labels = 'נסיעות מתועדות'[::-1], 'נסיעות לא מתועדות'[::-1], 'נסיעות לא ידועות'[::-1]
+      labels = 'נסיעות-מתועדות', 'נסיעות-לא-מתועדות', 'נסיעות-לא-ידועות'
       sizes = [ prec_of_actual_trips , prec_of_missed_trips, prec_of_unknown_trips]
+      numbers = [values_to_render['number_of_actual_trips'], values_to_render['number_of_missed_trips'], values_to_render['number_of_unknown_trips']]
 
 
-  values_to_render['actual_and_missed_trips_picture'] = pie_chart(labels,sizes,3)
+  # values_to_render['actual_and_missed_trips_picture'] = pie_chart(labels,sizes,3)
+  values_to_render['interactive_actual_and_missed_trips_pie_chart'] = pie_plotly(numbers, labels, group_title, number_title, title)
 
 
   return values_to_render
@@ -332,31 +345,35 @@ def reports_for_station(station , report_date, lang):
   routes_table_to_render = routes_table_to_render.values.tolist()
   values_to_render['routes_table'] = routes_table_to_render #add value to dictionary.
   
-  # create histogram of trips per hour
+  ############## create histogram of trips per hour
   times=data['departure_time'].values.tolist()
-  hours=["04-06", "06-08", "08-10", "10-12" , "12-14", "14-16", "16-18" , "18-20" , "20-22", "22-24", "24-28"] # hours ranges.
+  hours=["04 - 06", "06 - 08", "08 - 10", "10 - 12" , "12 - 14", "14 - 16",
+   "16 - 18" , "18 - 20" , "20 - 22", "22 - 24", "24 - 28"] # hours ranges.
 
-  title = 'Number of Trips in Station, Divided Into Hour Ranges' if lang=='en' else 'כמות הנסיעות שעוברות בתחנה, בחלוקה לטווחי שעות'[::-1]
-  y_axis = 'Number of Trips' if lang=='en' else 'מספר נסיעות'[::-1]
-  x_axis = 'Hour Range' if lang=='en' else 'טווחי שעות'[::-1]
+  title = 'Number of Trips in Station, Divided Into Hour Ranges' if lang=='en' else 'כמות הנסיעות שעוברות בתחנה, בחלוקה לטווחי שעות'
+  y_title = 'Number of Trips' if lang=='en' else 'מספר-נסיעות\n'
+  x_title = 'Hour Range' if lang=='en' else 'טווחי-שעות\n'
 
-  uri1=histogram_picture( hours, histogram_list_trip_per_hours(times) , x_axis, y_axis , title, 2) # create histogram picture
-  values_to_render['histogram_hours'] = uri1 #add value to dictionary.
+  values_to_render['histogram_hours_interactive_graph'] = histogram_plotly(hours, histogram_list_trip_per_hours(times), x_title, y_title, title)
+  # values_to_render['histogram_hours'] = histogram_picture( hours, histogram_list_trip_per_hours(times) , x_axis, y_axis , title, 2) # create histogram picture
   
-  # create histogram of trips per agency
+  ############### create histogram of trips per agency
   df4=data[['agency_name','trip_id','trip_date']]
   df4=df4.groupby(['agency_name'], as_index=False).count() 
   df4=df4[['agency_name','trip_id']]  
   agency=df4['agency_name'].values.tolist()
   agency = [ x[::-1] for x in agency ] # reverse string because of hebrew alphabet
+  agency_in_order = [ x[::-1] for x in agency]
   values=df4['trip_id'].values.tolist()
 
-  title = 'Number of Trips in Station, per Agency' if lang=='en' else 'כמות הנסיעות שעוברות בתחנה, בחלוקה לפי מפעילים'[::-1]
-  y_axis = 'Number of Trips' if lang=='en' else 'מספר נסיעות'[::-1]
-  x_axis = 'Agency Name' if lang=='en' else 'שם מפעיל'[::-1]
+  title = 'Number of Trips in Station, per Agency' if lang=='en' else 'כמות הנסיעות שעוברות בתחנה, בחלוקה לפי מפעילים'
+  y_title = 'Number of Trips' if lang=='en' else 'מספר-נסיעות\n'
+  x_title = 'Agency Name' if lang=='en' else 'שם-מפעיל\n'
 
-  uri2=histogram_picture( agency, values, x_axis, y_axis, title, 3)
-  values_to_render['histogram_agencies'] = uri2 #add value to dictionary.
+  # uri2=histogram_plotly(agency, values, x_axis, y_axis, title, 3)
+  # values_to_render['histogram_agencies'] = uri2 #add value to dictionary.
+
+  values_to_render['histogram_agencies_interactive'] = histogram_plotly(agency_in_order, values, x_title, y_title, title)
 
   values_to_render['data'] = data
   
@@ -497,14 +514,17 @@ def reports_for_agency(agency,report_date,lang):
   today_schedule_times = data[['departure_time','stop_sequence']]
   today_schedule_times = today_schedule_times[ today_schedule_times['stop_sequence'] == 1 ]
   today_schedule_times = today_schedule_times['departure_time'].values.tolist()
-  hours = ["04-06", "06-08", "08-10", "10-12" , "12-14", "14-16", "16-18" , "18-20" , "20-22", "22-24", "24-28"] # histogram hours ranges.
+  hours = ["04 - 06", "06 - 08", "08 - 10", "10 - 12" , "12 - 14",
+   "14 - 16", "16 - 18" , "18 - 20" , "20 - 22", "22 - 24", "24 - 28"] # histogram hours ranges.
 
-  title = 'Number of Trips Done by the Agency, Divided Into Hour Ranges' if lang=='en' else 'כמות הנסיעות שמבצע המפעיל, בחלוקה לטווחי שעות'[::-1]
-  y_axis = 'Number of Trips' if lang=='en' else 'מספר נסיעות'[::-1]
-  x_axis = 'Hour Range' if lang=='en' else 'טווחי שעות'[::-1]
+  title = 'Number of Trips Done by the Agency, Divided Into Hour Ranges' if lang=='en' else 'כמות הנסיעות שמבצע המפעיל, בחלוקה לטווחי שעות'
+  y_title = 'Number of Trips' if lang=='en' else 'מספר נסיעות'
+  x_title = 'Hour Range' if lang=='en' else 'טווחי שעות'
   
-  hours_histogram_picture = histogram_picture(hours,histogram_list_trip_per_hours(today_schedule_times),x_axis,y_axis,title) # histogram picture of route
-  values_to_render['hours_histogram_picture'] = hours_histogram_picture
+  # hours_histogram_picture = histogram_picture(hours,histogram_list_trip_per_hours(today_schedule_times),x_axis,y_axis,title) # histogram picture of route
+  # values_to_render['hours_histogram_picture'] = hours_histogram_picture
+
+  values_to_render['hours_histogram_interactive_graph'] = histogram_plotly(hours, histogram_list_trip_per_hours(today_schedule_times), x_title, y_title, title)
   
   """
     column_line_OTP, rows_line_OTP = line_OTP(report_date, line_id,direction)
@@ -546,12 +566,20 @@ def reports_for_agency(agency,report_date,lang):
   prec_of_missed_trips = 100 - prec_of_actual_trips
 
   if lang=='en':
+    title = 'Trips'
+    group_title = 'Classification'
+    number_title = 'Number of trips'
     labels = 'Recorded Trips','Unrecorded Trips'
   else:
-    labels = 'נסיעות מתועדות'[::-1], 'נסיעות לא מתועדות'[::-1]
+    title = 'נסיעות'
+    group_title = 'סיווג'
+    number_title = 'מספר נסיעות'
+    labels = 'נסיעות מתועדות', 'נסיעות לא מתועדות'
 
   sizes = [ prec_of_actual_trips , prec_of_missed_trips ]
-  values_to_render['actual_and_missed_trips_picture'] = pie_chart(labels,sizes,3)
+  numbers = [values_to_render['number_of_actual_trips'], values_to_render['number_of_missed_trips']]
+  # values_to_render['actual_and_missed_trips_picture'] = pie_chart(labels,sizes,3)
+  values_to_render['actual_and_missed_trips_interactive_graph'] = pie_plotly(labels, numbers, group_title, number_title, title)
   
   return values_to_render
  
@@ -749,12 +777,19 @@ def pie_chart(labels, sizes , size=1):
   return uri
 
 
-def histogram_plotly(x, y, graph_title):
+def histogram_plotly(x, y, x_title, y_title, graph_title):
   """This function creates an interactive plotly graph"""
-  df = pd.DataFrame({'Hours': x, 'Number of trips': y})
-  figure = px.bar(df, x='Hours', y='Number of trips', title=graph_title)
+  df = pd.DataFrame({x_title: x, y_title: y})
+  figure = px.bar(df, x=x_title, y=y_title, title=graph_title)
   figure = figure.update_layout(title_text=graph_title, title_x=0.5)
-  return figure.to_html(full_html=False, default_height=400, default_width=900)
+  return figure.to_html(full_html=False, default_height=350, default_width=700)
+
+def pie_plotly(numbers, labels, group_title, number_title, graph_title):
+  """This function creates an interactive plotly pie chart"""
+  df = pd.DataFrame({group_title: labels, number_title: numbers})
+  figure = px.pie(df, names=group_title, values=number_title, title=graph_title)
+  figure = figure.update_layout(title_text=graph_title, title_x=0.5)
+  return figure.to_html(full_html=False, default_height=450, default_width=900)
 
 
   
